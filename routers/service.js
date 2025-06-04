@@ -17,7 +17,7 @@ router.get("/:Id", async (req, res) => {
   try {
     console.log(req.params.Id)
     const Id = req.params.Id;
-    const routes = await Service.findById(Id);
+    const routes = await Service.find({"routeInfo.routeId" : Id});
     res.status(200).json(routes);
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch routes", error: error.message });

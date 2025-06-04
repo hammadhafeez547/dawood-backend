@@ -6,7 +6,7 @@ const transportOptionSchema = new mongoose.Schema({
   price: { type: String, required: true },
   perPerson: { type: Boolean, default: true },
   features: [String],
-  image: String,
+  
   vehicleType: String,
   capacity: String,
   duration: String,
@@ -19,7 +19,7 @@ const faqSchema = new mongoose.Schema({
 });
 
 const routeInfoSchema = new mongoose.Schema({
-  routeId: { type: String, required: true },
+  routeId: { type: String, required: true,unique: true },
   title: { type: String, required: true },
   category: String,
   distance: String,
@@ -33,6 +33,6 @@ const transportServiceSchema = new mongoose.Schema({
   transportOptions: [transportOptionSchema],
   faqs: [faqSchema],
 });
-const Service = mongoose.model("TravelRoute", transportServiceSchema);
+const Service = mongoose.model("ServiceRoute", transportServiceSchema);
 
 export default Service;
