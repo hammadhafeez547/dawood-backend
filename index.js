@@ -47,7 +47,7 @@ app.use("/service", serviceRoutes);
 
 app.get("/"  , (req , res)=>{
 res.json({
-    message : "kaisa ho bhai ",
+    message : "Hello from Dawood's backend server",
 })
     
 })
