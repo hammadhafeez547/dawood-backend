@@ -62,5 +62,5 @@ modifyDate: {
  
 });
 
-const Car = mongoose.model("cars", carSchema);
+const Car = mongoose.model("Car", carSchema);
 export default Car;
