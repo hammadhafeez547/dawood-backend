@@ -16,9 +16,8 @@ import cookieParser from "cookie-parser";
 
 const app = express();
 
-// Middleware
 app.use(cors({
-  origin: ['https://dawood-frontends.vercel.app', 'http://localhost:3000'], // Add all allowed origins
+  origin: [], // Add all allowed origins
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
