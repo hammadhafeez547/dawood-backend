@@ -18,9 +18,10 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: "https://dawood-frontends.vercel.app", 
-    credentials: true,
-  }));
+  origin: ['https://dawood-frontends.vercel.app', 'http://localhost:3000'], // Add all allowed origins
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser())
