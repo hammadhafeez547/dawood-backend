@@ -18,7 +18,7 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: "http://localhost:3000", 
+    origin: "https://dawood-frontends.vercel.app", 
     credentials: true,
   }));
 app.use(express.json());
