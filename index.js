@@ -15,11 +15,21 @@ import "dotenv/config";
 import cookieParser from "cookie-parser";
 
 const app = express();
-
+// Response headers middleware
+app.use((req, res, next) => {
+  res.header('Access-Control-Allow-Origin', 'https://dawood-frontends.vercel.app');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  next();
+});
 app.use(cors({
-  origin: [], // Add all allowed origins
+  origin: [
+    'https://dawood-frontends.vercel.app',
+    'http://localhost:3000' 
+  ],
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
-  credentials: true
+  credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization']
 }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
