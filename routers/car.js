@@ -1,18 +1,28 @@
 import express from "express";
 import multer from "multer";
+import { v2 as cloudinary } from 'cloudinary';
+import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import Car from "../model/Cars.js";
 
 const router = express.Router();
 
-// ======= Multer Configuration =======
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    const ext = file.originalname.split(".").pop();
-    cb(null, `${uniqueSuffix}.${ext}`);
+// Configure Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// ======= Multer Configuration with Cloudinary =======
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'car-rentals',
+    format: async (req, file) => file.mimetype.split('/')[1], // extracts jpg/png from mimetype
+    public_id: (req, file) => {
+      const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
+      return uniqueSuffix;
+    },
   },
 });
 
@@ -31,11 +41,9 @@ const upload = multer({ storage, fileFilter });
 // Add new car
 router.post("/car-add", upload.single("image"), async (req, res) => {
   try {
-    console.log(req.body);
-
     const {
       name,
-      model,
+
       brand,
       luggage,
       startingPrice,
@@ -52,24 +60,20 @@ router.post("/car-add", upload.single("image"), async (req, res) => {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
-    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
-
     const newCar = new Car({
       name,
-      model,
+      
       brand,
-      
       luggage,
-      
       startingPrice,
       passengers,
       modifyDate,
       rating: parseFloat(rating),
       reviews: parseInt(reviews),
       category,
-      popular: popular === "true", // checkbox boolean from form data
+      popular: popular === "true",
       description,
-      imageUrl: imagePath,
+      imageUrl: req.file ? req.file.path : null, // Cloudinary URL
       isAvailable: "Available",
     });
 
@@ -80,7 +84,6 @@ router.post("/car-add", upload.single("image"), async (req, res) => {
     res.status(500).json({ error: "Server Error" });
   }
 });
-
 
 // Get all cars
 router.get("/all-cars", async (req, res) => {
@@ -107,11 +110,9 @@ router.get("/:id", async (req, res) => {
 router.put('/:id', upload.single('image'), async (req, res) => {
   const { id } = req.params;
   const updatedData = req.body;
-  console.log(req.body);
-  
 
   if (req.file) {
-    updatedData.imageUrl = `/uploads/${req.file.filename}`;
+    updatedData.imageUrl = req.file.path; // Cloudinary URL
   }
 
   try {
