@@ -6,7 +6,7 @@ import fareRoutes from "./routers/fare.js";
 import rideRoutes from "./routers/ride.js";
 import serviceRoutes from "./routers/service.js";
 
-import routeRoutes from "./routers/route.js";
+import routeRoutes from "./routers/routes.js";
 
 import authRoutes  from "./routers/user.js";
 
