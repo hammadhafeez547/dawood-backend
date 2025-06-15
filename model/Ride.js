@@ -7,7 +7,9 @@ const bookingSchema = new mongoose.Schema({
   pickup: { type: String, required: true },
   drop: { type: String, required: true },
   price: { type: String, required: true },
-  car: { type: mongoose.Schema.Types.ObjectId, ref: "Car" },
+    car: { type: String, required: true },
+
+  // car: { type: mongoose.Schema.Types.ObjectId, ref: "Car" },
   status: {
     type: String,
     enum: ["pending", "confirmed", "completed", "cancelled"],

@@ -9,6 +9,7 @@ router.get("/", async (req, res) => {
   res.json(bookings)
 })
 router.post("/booking-add", async (req, res) => {
+  
     const { name, phone, pickup, drop, car , price } = req.body
     const newBooking = new Ride({ name, phone, pickup, drop, car, price, status: "confirmed" })
     await newBooking.save()
