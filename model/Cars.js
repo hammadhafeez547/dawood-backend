@@ -24,7 +24,7 @@ const carSchema = new mongoose.Schema({
    rating: {
     type: String,
     required: true,
-    unique: true,
+    
   },
    
   luggage : {

@@ -4,6 +4,8 @@ import { v2 as cloudinary } from 'cloudinary';
 import { CloudinaryStorage } from 'multer-storage-cloudinary';
 import Car from "../model/Cars.js";
 
+
+
 const router = express.Router();
 
 // Configure Cloudinary
@@ -17,7 +19,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'car-rentals',
+    folder: 'Media',
     format: async (req, file) => file.mimetype.split('/')[1], // extracts jpg/png from mimetype
     public_id: (req, file) => {
       const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
@@ -41,9 +43,11 @@ const upload = multer({ storage, fileFilter });
 // Add new car
 router.post("/car-add", upload.single("image"), async (req, res) => {
   try {
+  
+
+    // Extract data from req.body
     const {
       name,
-
       brand,
       luggage,
       startingPrice,
@@ -56,13 +60,14 @@ router.post("/car-add", upload.single("image"), async (req, res) => {
       description,
     } = req.body;
 
+    // Validate required fields
     if (!name || !brand || !luggage || !rating || !passengers) {
       return res.status(400).json({ error: "Missing required fields" });
     }
 
+    // Create new car document (adjust your Car model import & usage)
     const newCar = new Car({
       name,
-      
       brand,
       luggage,
       startingPrice,
@@ -73,17 +78,19 @@ router.post("/car-add", upload.single("image"), async (req, res) => {
       category,
       popular: popular === "true",
       description,
-      imageUrl: req.file ? req.file.path : null, // Cloudinary URL
+      imageUrl: req.file ? req.file.path : null,
       isAvailable: "Available",
     });
 
     await newCar.save();
+
     res.status(201).json({ message: "Car added successfully", car: newCar });
   } catch (error) {
     console.error("Error adding car:", error);
-    res.status(500).json({ error: "Server Error" });
+    res.status(500).json({ error: error.message || "Server Error" });
   }
 });
+
 
 // Get all cars
 router.get("/all-cars", async (req, res) => {
